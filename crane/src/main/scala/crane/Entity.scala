@@ -22,7 +22,7 @@ class Entity(var tag:String = "") {
   override def toString: String = {
     components.map{component =>
       component.toString
-    }.foldLeft("Entity: %s\n".format(uuid)) {_ + _}
+    }.foldLeft("Entity: %s, Tag: %s\n".format(uuid, tag)) {_ + _}
   }
 
   // Accessors 

@@ -1,11 +1,10 @@
 package crane.examples
 
 /** Crane Imports **/
-import crane.{Entity, Component, System, World}
+import crane.{Entity, Component, System, EntityProcessingSystem, World}
 
 /** External Imports **/
 import com.github.nscala_time.time.Imports._
-
 
 /**
  * This example shows how to create Components, Systems, and use them.
@@ -50,6 +49,22 @@ object Example extends App {
               println("We are missing some components")
           }}
     }
+  }
+
+  // Equivalent to the system above, except you don't iterate over each entity
+  class MovementEntityProcessingSystem extends EntityProcessingSystem(include=List(classOf[Position], classOf[Velocity])) {
+    override def processEntity(e: Entity, delta: Int) {
+      val position = e.getComponent(classOf[Position])
+      val velocity = e.getComponent(classOf[Velocity])
+
+      (position, velocity) match {
+        case(Some(p: Position), Some(v: Velocity)) =>
+          p.x += v.x * delta
+          p.y += v.y * delta
+          println(e)
+        case _ =>
+          println("We are missing some components")
+      }}
   }
 
   // Example of a system that processes every n milliseconds
