@@ -4,6 +4,7 @@ import sbt._
 import Keys._
 import com.typesafe.sbteclipse.plugin.EclipsePlugin._
 import sbt.Project.Initialize
+import com.github.retronym.SbtOneJar
 
 object CraneBuild extends Build {
 
@@ -22,19 +23,22 @@ object CraneBuild extends Build {
 
   lazy val root = Project(id ="root",
                           base = file("."),
-                          settings = defaultSettings ++ compileJdk7Settings ++ Seq(
+                          settings = defaultSettings ++ compileJdk7Settings ++ SbtOneJar.oneJarSettings ++ Seq(
+                            exportJars := true,
                             mainClass in (Compile, run) := Some("crane.examples.Example")
                           )) dependsOn(crane, examples)
 
   lazy val crane = Project(id = "crane",
                            base = file("crane"),
                            settings = defaultSettings ++ compileJdk7Settings ++ Seq(
+                            exportJars := true,
                             libraryDependencies ++= Dependencies.crane))
 
   lazy val examples = Project(id = "crane-examples",
                            base = file("crane-examples"),
                            settings = defaultSettings ++ compileJdk7Settings ++ Seq(
-                            libraryDependencies ++= Dependencies.examples)) dependsOn(crane)
+                             exportJars := true,
+                             libraryDependencies ++= Dependencies.examples)) dependsOn(crane)
 
 }
 
