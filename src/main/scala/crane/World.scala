@@ -21,13 +21,26 @@ class World(var delta: Int=1) {
     }.toList
   }
 
+  def getEntitiesWithExclusions[T <: AnyRef](include: List[T], exclude: List[T] = List()) = {
+    if (exclude.length > 0) {
+      entities.filter { entity => 
+        val entityComponentTypes: Set[Object]  = entity.components.map(c => c.getClass).toSet
+        (include.toSet subsetOf entityComponentTypes) && !(exclude.toSet subsetOf entityComponentTypes)
+      }.toList
+    } else {
+      getEntitiesByComponents(include: _*)
+    }
+  }
+
   def addEntity(entity: Entity, second: Boolean = false) {
     _entities find { case(e) => e == entity} match {
       case Some(e: Entity) =>
-        // TODO: RAISE EXCEPTION
-        println("BAD")
+        throw new DuplicateEntityException
       case _ =>
-        _entities += entity
+        if (second)
+          _entities += entity
+        else
+          entity.world = this
     }
   }
 
@@ -36,6 +49,7 @@ class World(var delta: Int=1) {
       _systems(tier) = new ArrayBuffer[System]
     }
     _systems(tier) += system
+    system.world = this
   }
 
   def createEntity(tag: String=""): Entity = {

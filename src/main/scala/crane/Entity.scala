@@ -10,8 +10,7 @@ class Entity(var tag:String = "") {
 
   def world_=(world: World) {
     if(world.getEntityByTag(this.tag) != None && this.tag != "") {
-      // TODO: Raise Exception
-      println("BAD")
+      throw new DuplicateTagException
     } else {
       this._world = Some(world)
       world.addEntity(this, true)
