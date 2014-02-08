@@ -1,13 +1,35 @@
 package crane.examples
+
+/** Crane Imports **/
 import crane.{Entity, Component, System, World}
+
+/** External Imports **/
 import com.github.nscala_time.time.Imports._
 
 
+/**
+ * This example shows how to create Components, Systems, and use them.
+ */
 object Example extends App {
-  class Position(var x: Int, var y: Int) extends Component
-  class Velocity(var x: Int, var y: Int) extends Component
-  class Useless extends Component
+  
+  /** Components **/
+  class Position(var x: Int, var y: Int) extends Component {
+    override def toString: String = {
+      "\t Position x:%s, y:%s".format(x, y)
+    }
+  }
+  class Velocity(var x: Int, var y: Int) extends Component {
+    override def toString: String = {
+      "\t Velocity x:%s, y:%s".format(x, y)
+    }
+  }
+  class Useless extends Component {
+    override def toString: String = {
+      "\t Useless Please don't banana bread me"
+    }
+  }
 
+  /** Systems **/
   class MovementSystem extends System {
     override def process(delta: Int) {
       val entities = world.getEntitiesByComponents(classOf[Position], classOf[Velocity])
@@ -23,20 +45,19 @@ object Example extends App {
             case(Some(p: Position), Some(v: Velocity)) =>
               p.x += v.x * delta
               p.y += v.y * delta
-              println("%s: x :%s, y: %s".format(entity.tag, p.x, p.y))
+              println(entity)
             case _ =>
               println("We are missing some components")
           }}
     }
   }
 
+  // Example of a system that processes every n milliseconds
   class TimedSystem(milliseconds: Int) extends System {
     var start = DateTime.now
-    
     override def process(delta: Int) {
       if((start to DateTime.now).millis >= milliseconds) {
         val entities = world.getEntitiesByComponents(classOf[Useless])
-
         println("Killing %d entities".format(entities.length))
         entities.foreach { entity: Entity =>
           entity.kill
@@ -47,9 +68,13 @@ object Example extends App {
     }
   }
 
+  // Create World
   val world = new World
-  val player = world.createEntity(tag="PLAYER")
+  // Default is already 1 - this does not need to be set unless you need variable deltas
+  // world.delta = 1
 
+  // Create entities
+  val player = world.createEntity(tag="PLAYER")
   player.components += new Position(0,0)
   player.components += new Velocity(1,1)
 
@@ -64,7 +89,7 @@ object Example extends App {
   world.addEntity(player)
   world.addEntity(useless)
   world.addSystem(new MovementSystem)
-  world.addSystem(new TimedSystem(3000))
+  world.addSystem(new TimedSystem(3000), 1)
 
   world.createGroup("THINGS")
   world.groups("THINGS") += player

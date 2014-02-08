@@ -1,25 +1,37 @@
 package crane
 
+/** Crane Exception Imports **/
 import crane.exceptions.{DeadEntityException, DuplicateTagException, MissingComponentException}
-import scala.collection.mutable.ArrayBuffer
-class Entity(var tag:String = "") {
-  private var _world = None : Option[World]
-  var alive: Boolean = true
 
+/** External Imports **/
+import scala.collection.mutable.ArrayBuffer
+
+/** An Entity that holds components
+ * @constructor create an entity
+ * @param tag optional String to identify a specific entity (must be unique)
+ */
+class Entity(var tag:String = "") {
+  // Private Variables
+  private var _world = None : Option[World]
+
+  // Public Variables
+  var alive: Boolean = true
   val components = ArrayBuffer.empty[Component]
   val uuid: String = java.util.UUID.randomUUID.toString
 
-  def world = _world
-
-  def world_=(world: World) {
-    if(world.getEntityByTag(this.tag) != None && this.tag != "") {
-      throw new DuplicateTagException
-    } else {
-      this._world = Some(world)
-      world.addEntity(this, true)
-    }
+  override def toString: String = {
+    components.map{component =>
+      component.toString
+    }.foldLeft("Entity: %s\n".format(uuid)) {_ + _}
   }
 
+  // Accessors 
+  def world = _world
+
+  /** Returns component of a classOf[Component]
+   *
+   * @param componentType the component to get (the class, not the instance)
+   */
   def getComponent[T <: AnyRef](componentType: T): Option[Component] = {
     if(alive)
       components find { case(component) => component.getClass == componentType }
@@ -27,6 +39,26 @@ class Entity(var tag:String = "") {
       throw new DeadEntityException
   }
 
+  // Mutators
+
+  /** Sets the world to a new world
+   *
+   * @param world the World to set
+   */
+  def world_=(world: World) {
+    // If this world already has an entity of this tag
+    if(world.getEntityByTag(this.tag) != None && this.tag != "") {
+      throw new DuplicateTagException
+    } else { // Otherwise
+      this._world = Some(world)
+      world.addEntity(this, true)
+    }
+  }
+
+  /** Removes component of a classOf[Component]
+   *
+   * @param componentType the component to remove (the class, not the instance)
+   */
   def removeComponent[T <: AnyRef](componentType: T) {
     if(alive) {
       val removeEntity: Option[Component] = getComponent(componentType)
@@ -41,6 +73,7 @@ class Entity(var tag:String = "") {
     }
   }
 
+  /** Kills the entity and removes it from the world it is in */
   def kill() {
     if(alive) {
       alive = false
