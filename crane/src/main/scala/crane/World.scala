@@ -1,5 +1,6 @@
 package crane
 
+import crane.exceptions.DuplicateEntityException
 import scala.collection.mutable.{ArrayBuffer, HashMap}
 
 class World(var delta: Int=1) {
@@ -37,10 +38,11 @@ class World(var delta: Int=1) {
       case Some(e: Entity) =>
         throw new DuplicateEntityException
       case _ =>
-        if (second)
+        if (second) {
           _entities += entity
-        else
+        } else {
           entity.world = this
+        }
     }
   }
 
@@ -54,6 +56,25 @@ class World(var delta: Int=1) {
 
   def createEntity(tag: String=""): Entity = {
     new Entity(tag)
+  }
+
+  def createGroup(group: String) {
+    groups(group) = new ArrayBuffer[Entity]
+  }
+
+
+  def removeEntity(entity: Entity, second: Boolean = false){
+    if(_entities contains entity){
+      if(second) {
+        for(group <- groups) {
+          if(group._2 contains entity)
+            group._2 -= entity
+        }
+        _entities -= entity
+      } else {
+        entity.kill()
+      }
+    }
   }
 
   def process() {

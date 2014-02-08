@@ -1,4 +1,7 @@
+package crane.examples
 import crane.{Entity, Component, System, World}
+import com.github.nscala_time.time.Imports._
+
 
 object Example extends App {
   class Position(var x: Int, var y: Int) extends Component
@@ -7,9 +10,10 @@ object Example extends App {
 
   class MovementSystem extends System {
     override def process(delta: Int) {
-      val entities = world.getEntitiesWithExclusions(include=List(classOf[Position], classOf[Velocity]), exclude=List(classOf[Useless]))
-      // If you don't need exclusions, use
-      // val entities = world.getEntitiesByComponents(classOf[Position], classOf[Velocity])
+      val entities = world.getEntitiesByComponents(classOf[Position], classOf[Velocity])
+
+      // If you need exclusions
+      // val entities = world.getEntitiesWithExclusions(include=List(classOf[Position], classOf[Velocity]), exclude=List(classOf[Useless]))
 
       entities.foreach{ entity: Entity =>
           val position = entity.getComponent(classOf[Position])
@@ -26,6 +30,23 @@ object Example extends App {
     }
   }
 
+  class TimedSystem(milliseconds: Int) extends System {
+    var start = DateTime.now
+    
+    override def process(delta: Int) {
+      if((start to DateTime.now).millis >= milliseconds) {
+        val entities = world.getEntitiesByComponents(classOf[Useless])
+
+        println("Killing %d entities".format(entities.length))
+        entities.foreach { entity: Entity =>
+          entity.kill
+          println("Banana bread") 
+        }
+        start = DateTime.now
+      }
+    }
+  }
+
   val world = new World
   val player = world.createEntity(tag="PLAYER")
 
@@ -37,11 +58,22 @@ object Example extends App {
   useless.components += new Velocity(2,0)
   useless.components += new Useless
 
+  // Use this to make useless show up in the movement system
+  //useless.removeComponent(classOf[Useless])
+
   world.addEntity(player)
   world.addEntity(useless)
   world.addSystem(new MovementSystem)
+  world.addSystem(new TimedSystem(3000))
 
-  while (true) {
+  world.createGroup("THINGS")
+  world.groups("THINGS") += player
+  world.groups("THINGS") += useless
+
+  // Use this to remove entity
+  // world.removeEntity(useless)
+
+  while (true) { 
     world.process
   }
 }
