@@ -50,7 +50,7 @@ class Entity(var tag:String = "") {
     if(world.getEntityByTag(this.tag) != None && this.tag != "") {
       throw new DuplicateTagException
     } else { // Otherwise
-      this._world = Some(world)
+      _world = Some(world)
       world.addEntity(this, true)
     }
   }
@@ -83,7 +83,7 @@ class Entity(var tag:String = "") {
         case _ =>
           throw new DeadEntityException
       }
-      _world = null
+      _world = None
     } else {
       throw new DeadEntityException
     }

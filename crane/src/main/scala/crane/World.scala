@@ -35,7 +35,7 @@ class World(var delta: Int=1) {
    * @param componentTypes the components to match against (the class - not the instance)
    */
   def getEntitiesByComponents[T <: AnyRef](componentTypes: T*): List[Entity] = {
-    entities.filter { entity => 
+    _entities.filter { entity => 
       val entityComponentTypes: Set[Object]  = entity.components.map(c => c.getClass).toSet
       componentTypes.toSet subsetOf entityComponentTypes
     }.toList
@@ -48,7 +48,7 @@ class World(var delta: Int=1) {
    */
   def getEntitiesWithExclusions[T <: AnyRef](include: List[T], exclude: List[T] = List()) = {
     if (exclude.length > 0) {
-      entities.filter { entity => 
+      _entities.filter { entity => 
         val entityComponentTypes: Set[Object]  = entity.components.map(c => c.getClass).toSet
         (include.toSet subsetOf entityComponentTypes) && !(exclude.toSet subsetOf entityComponentTypes)
       }.toList
