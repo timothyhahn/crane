@@ -76,7 +76,6 @@ class Entity(var tag:String = "") {
   /** Kills the entity and removes it from the world it is in */
   def kill() {
     if(alive) {
-      alive = false
       _world match {
         case Some(w: World) =>
           w.removeEntity(this, true)
@@ -84,6 +83,7 @@ class Entity(var tag:String = "") {
           throw new DeadEntityException
       }
       _world = None
+      alive = false
     } else {
       throw new DeadEntityException
     }
