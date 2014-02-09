@@ -4,7 +4,7 @@ package crane
 import crane.exceptions.DuplicateEntityException
 
 /** External Imports **/
-import scala.collection.mutable.{ArrayBuffer, HashMap}
+import scala.collection.mutable.{ArrayBuffer, HashMap, SynchronizedBuffer}
 import scala.collection.concurrent.{Map => ConcurrentMap}
 import java.util.concurrent.ConcurrentHashMap
 import collection.JavaConversions._
@@ -16,7 +16,7 @@ import collection.JavaConversions._
  */
 class World(var delta: Int=1) {
   // Private Variables 
-  private val _entities: ArrayBuffer[Entity] = ArrayBuffer()
+  private val _entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
   private val _systems: HashMap[Int, ArrayBuffer[System]] = HashMap()
 
   // Public Variables 
