@@ -137,7 +137,6 @@ class World(var delta: Int=1) {
       if(second) {
         for(group <- groups) {
           if(group._2 contains entity)
-            println("REMOVED ENTITY")
             group._2 -= entity
         }
         _entities -= entity
