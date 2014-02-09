@@ -5,6 +5,9 @@ import crane.exceptions.DuplicateEntityException
 
 /** External Imports **/
 import scala.collection.mutable.{ArrayBuffer, HashMap}
+import scala.collection.concurrent.{Map => ConcurrentMap}
+import java.util.concurrent.ConcurrentHashMap
+import collection.JavaConversions._
 
 /** Creates world 
  *
@@ -17,7 +20,7 @@ class World(var delta: Int=1) {
   private val _systems: HashMap[Int, ArrayBuffer[System]] = HashMap()
 
   // Public Variables 
-  val groups: HashMap[String, ArrayBuffer[Entity]] = HashMap()
+  val groups: ConcurrentMap[String, ArrayBuffer[Entity]] = new ConcurrentHashMap[String, ArrayBuffer[Entity]]
 
   // Accessors 
   def entities = this._entities
@@ -134,6 +137,7 @@ class World(var delta: Int=1) {
       if(second) {
         for(group <- groups) {
           if(group._2 contains entity)
+            println("REMOVED ENTITY")
             group._2 -= entity
         }
         _entities -= entity
