@@ -57,6 +57,12 @@ class World(var delta: Int=1) {
     }
   }
 
+  /** Get Group
+   *
+   * @param group the group to get as a string
+   */
+  def getGroup(group: String): ArrayBuffer[Entity] = { groups(group) }
+
   // Mutators
 
   /** Adds entity to world
@@ -106,13 +112,25 @@ class World(var delta: Int=1) {
     groups(group) = new ArrayBuffer[Entity]
   }
 
+  /** Registers entity to group
+   *
+   * @param entity the Entity to add
+   * @param group the group name as a string
+   */
+  def registerEntityToGroup(entity: Entity, group: String): ArrayBuffer[Entity] = {
+    if(!(groups.keys.toList contains group)){
+      createGroup(group)
+    }
+    groups(group) += entity
+  }
+
   /** Removes specific entity from world
    *
    * @param entity the Entity to remove
    * @param second boolean signifying that the Entity has initialized this call - you should not need to use this
    */
   def removeEntity(entity: Entity, second: Boolean = false){
-    if(_entities contains entity){
+    if(_entities contains entity) {
       if(second) {
         for(group <- groups) {
           if(group._2 contains entity)

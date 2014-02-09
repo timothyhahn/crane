@@ -22,19 +22,21 @@ object CraneBuild extends Build {
 
   lazy val root = Project(id ="root",
                           base = file("."),
-                          settings = defaultSettings ++ compileJdk7Settings ++ Seq(
+                          settings = defaultSettings ++ Unidoc.settings ++ Seq(
+                            Unidoc.unidocExclude := Seq(examples.id),
                             mainClass in (Compile, run) := Some("crane.examples.Example")
-                          )) dependsOn(crane, examples)
+                          )) aggregate(crane) dependsOn(examples)
 
   lazy val crane = Project(id = "crane",
                            base = file("crane"),
                            settings = defaultSettings ++ compileJdk7Settings ++ Seq(
-                            libraryDependencies ++= Dependencies.crane))
+                             scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/root-doc.html"),
+                             libraryDependencies ++= Dependencies.crane))
 
   lazy val examples = Project(id = "crane-examples",
                            base = file("crane-examples"),
                            settings = defaultSettings ++ compileJdk7Settings ++ Seq(
-                            libraryDependencies ++= Dependencies.examples)) dependsOn(crane)
+                             libraryDependencies ++= Dependencies.examples)) dependsOn(crane)
 
 }
 
