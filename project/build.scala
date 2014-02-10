@@ -8,8 +8,8 @@ import sbt.Project.Initialize
 object CraneBuild extends Build {
 
   lazy val defaultSettings = Defaults.defaultSettings ++ Seq(
-    organization := "net.timothyhahn.crane",
-    version := "0.0.1",
+    organization := "net.timothyhahn",
+    version := "0.1.0",
     scalaVersion := Dependency.V.Scala,
     EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.Unmanaged, EclipseCreateSrc.Source, EclipseCreateSrc.Resource),
     EclipseKeys.withSource := true,
