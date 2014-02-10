@@ -12,7 +12,38 @@ object CraneBuild extends Build {
     version := "0.0.1",
     scalaVersion := Dependency.V.Scala,
     EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.Unmanaged, EclipseCreateSrc.Source, EclipseCreateSrc.Resource),
-    EclipseKeys.withSource := true
+    EclipseKeys.withSource := true,
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+        if (isSnapshot.value)
+          Some("snapshots" at nexus + "content/repositories/snapshots")
+        else
+          Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
+    publishMavenStyle := true,
+    publishArtifact in Test := false,
+    pomIncludeRepository := { _ => false },
+    pomExtra := (
+      <url>http://timothyhahn.github.io/crane/</url>
+      <licenses>
+        <license>
+          <name>BSD-style</name>
+          <url>http://www.opensource.org/licenses/bsd-license.php</url>
+          <distribution>repo</distribution>
+        </license>
+      </licenses>
+      <scm>
+        <url>git@github.com:timothyhahn/crane.git</url>
+        <connection>scm:git:git@github.com:timothyhahn/crane.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>timothyhahn</id>
+          <name>Timothy Hahn</name>
+          <url>http://timothyhahn.net</url>
+        </developer>
+      </developers>
+    )
   )
 
   lazy val compileJdk7Settings = Seq(
@@ -24,6 +55,7 @@ object CraneBuild extends Build {
                           base = file("."),
                           settings = defaultSettings ++ Unidoc.settings ++ Seq(
                             Unidoc.unidocExclude := Seq(examples.id),
+                            publishArtifact := false,
                             mainClass in (Compile, run) := Some("crane.examples.Example")
                           )) aggregate(crane) dependsOn(examples)
 
@@ -36,6 +68,7 @@ object CraneBuild extends Build {
   lazy val examples = Project(id = "crane-examples",
                            base = file("crane-examples"),
                            settings = defaultSettings ++ compileJdk7Settings ++ Seq(
+                             publishArtifact := false,
                              libraryDependencies ++= Dependencies.examples)) dependsOn(crane)
 
 }
