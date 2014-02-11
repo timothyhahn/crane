@@ -168,21 +168,53 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="crane.World#addEntity" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="addEntity(entity:crane.Entity,second:Boolean):Unit"></a>
-      <a id="addEntity(Entity,Boolean):Unit"></a>
+    </li><li name="crane.World#_addEntity" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="_addEntity(entity:crane.Entity,second:Boolean):Unit"></a>
+      <a id="_addEntity(Entity,Boolean):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addEntity</span><span class="params">(<span name="entity">entity: <a href="Entity.html" class="extype" name="crane.Entity">Entity</a></span>, <span name="second">second: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">_addEntity</span><span class="params">(<span name="entity">entity: <a href="Entity.html" class="extype" name="crane.Entity">Entity</a></span>, <span name="second">second: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Adds entity to world
-</p><div class="fullcomment"><div class="comment cmt"><p>Adds entity to world
+      <p class="shortcomment cmt">Adds entity to world (Probably should not use - for internal use)
+</p><div class="fullcomment"><div class="comment cmt"><p>Adds entity to world (Probably should not use - for internal use)
 </p></div><dl class="paramcmts block"><dt class="param">entity</dt><dd class="cmt"><p>the Entity to add to the world</p></dd><dt class="param">second</dt><dd class="cmt"><p>boolean signifying that the Entity has initialized this call - you should not need to use this
+</p></dd></dl></div>
+    </li><li name="crane.World#_removeEntity" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="_removeEntity(entity:crane.Entity,second:Boolean):Unit"></a>
+      <a id="_removeEntity(Entity,Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">_removeEntity</span><span class="params">(<span name="entity">entity: <a href="Entity.html" class="extype" name="crane.Entity">Entity</a></span>, <span name="second">second: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Removes specific entity from world (Probably should not use - for internal use)
+</p><div class="fullcomment"><div class="comment cmt"><p>Removes specific entity from world (Probably should not use - for internal use)
+</p></div><dl class="paramcmts block"><dt class="param">entity</dt><dd class="cmt"><p>the Entity to remove</p></dd><dt class="param">second</dt><dd class="cmt"><p>boolean signifying that the Entity has initialized this call - you should not need to use this
+</p></dd></dl></div>
+    </li><li name="crane.World#addEntity" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addEntity(entity:crane.Entity):Unit"></a>
+      <a id="addEntity(Entity):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addEntity</span><span class="params">(<span name="entity">entity: <a href="Entity.html" class="extype" name="crane.Entity">Entity</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Queues specific entity to be removed from world
+</p><div class="fullcomment"><div class="comment cmt"><p>Queues specific entity to be removed from world
+</p></div><dl class="paramcmts block"><dt class="param">entity</dt><dd class="cmt"><p>the Entity to add
 </p></dd></dl></div>
     </li><li name="crane.World#addSystem" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addSystem(system:crane.System,tier:Int):Unit"></a>
@@ -414,15 +446,15 @@
 </p></div><dl class="paramcmts block"><dt class="param">group</dt><dd class="cmt"><p>the group to get as a string
 </p></dd></dl></div>
     </li><li name="crane.World#groups" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="groups:scala.collection.mutable.HashMap[String,scala.collection.mutable.ArrayBuffer[crane.Entity]]"></a>
-      <a id="groups:HashMap[String,ArrayBuffer[Entity]]"></a>
+      <a id="groups:scala.collection.concurrent.Map[String,scala.collection.mutable.ArrayBuffer[crane.Entity]]"></a>
+      <a id="groups:Map[String,ArrayBuffer[Entity]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">groups</span><span class="result">: <span class="extype" name="scala.collection.mutable.HashMap">HashMap</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="Entity.html" class="extype" name="crane.Entity">Entity</a>]]</span>
+        <span class="name">groups</span><span class="result">: <span class="extype" name="scala.collection.concurrent.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="Entity.html" class="extype" name="crane.Entity">Entity</a>]]</span>
       </span>
       </h4>
       
@@ -521,20 +553,20 @@
 </p></div><dl class="paramcmts block"><dt class="param">entity</dt><dd class="cmt"><p>the Entity to add</p></dd><dt class="param">group</dt><dd class="cmt"><p>the group name as a string
 </p></dd></dl></div>
     </li><li name="crane.World#removeEntity" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="removeEntity(entity:crane.Entity,second:Boolean):Unit"></a>
-      <a id="removeEntity(Entity,Boolean):Unit"></a>
+      <a id="removeEntity(entity:crane.Entity):Unit"></a>
+      <a id="removeEntity(Entity):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">removeEntity</span><span class="params">(<span name="entity">entity: <a href="Entity.html" class="extype" name="crane.Entity">Entity</a></span>, <span name="second">second: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">removeEntity</span><span class="params">(<span name="entity">entity: <a href="Entity.html" class="extype" name="crane.Entity">Entity</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Removes specific entity from world
-</p><div class="fullcomment"><div class="comment cmt"><p>Removes specific entity from world
-</p></div><dl class="paramcmts block"><dt class="param">entity</dt><dd class="cmt"><p>the Entity to remove</p></dd><dt class="param">second</dt><dd class="cmt"><p>boolean signifying that the Entity has initialized this call - you should not need to use this
+      <p class="shortcomment cmt">Queues specific entity to be removed from world
+</p><div class="fullcomment"><div class="comment cmt"><p>Queues specific entity to be removed from world
+</p></div><dl class="paramcmts block"><dt class="param">entity</dt><dd class="cmt"><p>the Entity to remove
 </p></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
