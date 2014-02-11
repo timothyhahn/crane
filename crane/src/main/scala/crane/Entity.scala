@@ -51,7 +51,7 @@ class Entity(var tag:String = "") {
       throw new DuplicateTagException
     } else { // Otherwise
       _world = Some(world)
-      world.addEntity(this, true)
+      world._addEntity(this, true)
     }
   }
 
@@ -73,12 +73,12 @@ class Entity(var tag:String = "") {
     }
   }
 
-  /** Kills the entity and removes it from the world it is in */
-  def kill() {
+  /** Kills the entity and removes it from the world it is in (Probably do not want to use - for internal use)*/
+  def _kill() {
     if(alive) {
       _world match {
         case Some(w: World) =>
-          w.deleteEntity(this, true)
+          w._removeEntity(this, true)
         case _ =>
           throw new DeadEntityException
       }
@@ -89,4 +89,17 @@ class Entity(var tag:String = "") {
     }
   }
 
+  /** Adds self to be removed from world **/
+  def kill() {
+    if(alive) {
+      _world match { 
+        case Some(w: World) =>
+          w.removeEntity(this)
+        case _ =>
+          throw new DeadEntityException
+      }
+    } else {
+      throw new DeadEntityException
+    }
+  }
 }

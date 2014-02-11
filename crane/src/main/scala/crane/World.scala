@@ -16,8 +16,10 @@ import collection.JavaConversions._
  */
 class World(var delta: Int=1) {
   // Private Variables 
-  private val _entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
+  private val _entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity]
   private val _deleted: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
+  private val _added: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
+
 
   private val _systems: HashMap[Int, ArrayBuffer[System]] = HashMap()
 
@@ -70,12 +72,12 @@ class World(var delta: Int=1) {
 
   // Mutators
 
-  /** Adds entity to world
+  /** Adds entity to world (Probably should not use - for internal use)
    * 
    * @param entity the Entity to add to the world
    * @param second boolean signifying that the Entity has initialized this call - you should not need to use this
    */
-  def addEntity(entity: Entity, second: Boolean = false) {
+  def _addEntity(entity: Entity, second: Boolean = false) {
     _entities find { case(e) => e == entity} match {
       case Some(e: Entity) =>
         throw new DuplicateEntityException
@@ -85,6 +87,16 @@ class World(var delta: Int=1) {
         } else {
           entity.world = this
         }
+    }
+  }
+
+  /** Queues specific entity to be removed from world
+   *
+   * @param entity the Entity to add
+   */
+  def addEntity(entity: Entity) {
+   if(!(_added contains entity)) {
+      _added += entity
     }
   }
 
@@ -129,12 +141,12 @@ class World(var delta: Int=1) {
     groups(group) += entity
   }
 
-  /** Removes specific entity from world
+  /** Removes specific entity from world (Probably should not use - for internal use)
    *
    * @param entity the Entity to remove
    * @param second boolean signifying that the Entity has initialized this call - you should not need to use this
    */
-  def deleteEntity(entity: Entity, second: Boolean = false){
+  def _removeEntity(entity: Entity, second: Boolean = false){
     if(_entities contains entity) {
       if(second) {
         for(group <- groups) {
@@ -143,11 +155,15 @@ class World(var delta: Int=1) {
         }
         _entities -= entity
       } else {
-        entity.kill()
+        entity._kill()
       }
     }
   }
 
+  /** Queues specific entity to be removed from world
+   *
+   * @param entity the Entity to remove
+   */
   def removeEntity(entity: Entity) {
     if(!(_deleted contains entity)) {
       _deleted += entity
@@ -156,10 +172,15 @@ class World(var delta: Int=1) {
 
   /** Processes the world **/
   def process() {
-
     _deleted.foreach{ entity =>
-      deleteEntity(entity)
+      _removeEntity(entity)
     }
+    _deleted.clear()
+    _added.foreach { entity =>
+      _addEntity(entity)
+    }
+    _added.clear()
+
     val tiers = _systems.keys.toList.sortWith(_ < _)
     tiers.foreach{ tier =>
         _systems(tier).foreach{system =>
