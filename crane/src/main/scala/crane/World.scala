@@ -57,7 +57,7 @@ class World(var delta: Int=1) {
     if (exclude.length > 0) {
       _entities.filter { entity => 
         val entityComponentTypes: Set[Object]  = entity.components.map(c => c.getClass).toSet
-        (include.toSet subsetOf entityComponentTypes) && !(exclude.toSet subsetOf entityComponentTypes)
+        (include.toSet subsetOf entityComponentTypes) && (exclude.toSet intersect entityComponentTypes).isEmpty
       }.toList
     } else {
       getEntitiesByComponents(include: _*)
