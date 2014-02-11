@@ -83,6 +83,7 @@ class Entity(var tag:String = "") {
           throw new DeadEntityException
       }
       _world = None
+      components.clear()
       alive = false
     } else {
       throw new DeadEntityException
