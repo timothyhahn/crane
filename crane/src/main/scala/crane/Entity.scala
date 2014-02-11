@@ -78,7 +78,7 @@ class Entity(var tag:String = "") {
     if(alive) {
       _world match {
         case Some(w: World) =>
-          w.removeEntity(this, true)
+          w.deleteEntity(this, true)
         case _ =>
           throw new DeadEntityException
       }

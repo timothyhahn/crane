@@ -17,6 +17,8 @@ import collection.JavaConversions._
 class World(var delta: Int=1) {
   // Private Variables 
   private val _entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
+  private val _deleted: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
+
   private val _systems: HashMap[Int, ArrayBuffer[System]] = HashMap()
 
   // Public Variables 
@@ -132,7 +134,7 @@ class World(var delta: Int=1) {
    * @param entity the Entity to remove
    * @param second boolean signifying that the Entity has initialized this call - you should not need to use this
    */
-  def removeEntity(entity: Entity, second: Boolean = false){
+  def deleteEntity(entity: Entity, second: Boolean = false){
     if(_entities contains entity) {
       if(second) {
         for(group <- groups) {
@@ -146,8 +148,18 @@ class World(var delta: Int=1) {
     }
   }
 
+  def removeEntity(entity: Entity) {
+    if(!(_deleted contains entity)) {
+      _deleted += entity
+    }
+  }
+
   /** Processes the world **/
   def process() {
+
+    _deleted.foreach{ entity =>
+      deleteEntity(entity)
+    }
     val tiers = _systems.keys.toList.sortWith(_ < _)
     tiers.foreach{ tier =>
         _systems(tier).foreach{system =>
