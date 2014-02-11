@@ -76,7 +76,7 @@ object CraneBuild extends Build {
 object Dependencies {
   import Dependency._
   val crane = Seq(
-    Dependency.akkaActor, Dependency.akkaTransactor, Dependency.scalaSTM,
+    Dependency.akkaActor, Dependency.akkaTransactor, Dependency.scalaSTM, Dependency.scalatime,
     Dependency.scalatest
   )
   val examples = Seq(

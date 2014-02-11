@@ -10,6 +10,11 @@ import scala.collection.mutable.ArrayBuffer
  * @constructor create an entity
  * @param tag optional String to identify a specific entity (must be unique)
  */
+
+object Entity {
+  def apply(tag: String = "") = new Entity(tag)
+}
+
 class Entity(var tag:String = "") {
   // Private Variables
   private var _world = None : Option[World]

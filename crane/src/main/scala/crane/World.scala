@@ -14,6 +14,11 @@ import collection.JavaConversions._
  * @constructor creates the world
  * @param delta the delta in integers
  */
+
+object World {
+  def apply(delta: Int=1) = new World(delta)
+}
+
 class World(var delta: Int=1) {
   // Private Variables 
   private val _entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity]

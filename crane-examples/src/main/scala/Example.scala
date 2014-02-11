@@ -1,7 +1,7 @@
 package crane.examples
 
 /** Crane Imports **/
-import crane.{Entity, Component, System, EntityProcessingSystem, World}
+import crane.{Entity, Component, System, EntityProcessingSystem, TimedSystem, IntervalSystem, World}
 
 /** External Imports **/
 import com.github.nscala_time.time.Imports._
@@ -51,7 +51,7 @@ object Example extends App {
     }
   }
 
-  // Equivalent to the system above, except you don't iterate over each entity
+  // Equivalent to the system above, except you specify each individual entity
   class MovementEntityProcessingSystem extends EntityProcessingSystem(include=List(classOf[Position], classOf[Velocity])) {
     override def processEntity(e: Entity, delta: Int) {
       val position = e.getComponent(classOf[Position])
@@ -68,7 +68,7 @@ object Example extends App {
   }
 
   // Example of a system that processes every n milliseconds
-  class TimedSystem(milliseconds: Int) extends System {
+  class CustomTimedSystem(milliseconds: Int) extends System {
     var start = DateTime.now
     override def process(delta: Int) {
       if((start to DateTime.now).millis >= milliseconds) {
@@ -83,8 +83,33 @@ object Example extends App {
     }
   }
 
+  // Equivalent to above 
+  class MyTimedSystem extends TimedSystem(3000) {
+    override def processTime (delta: Int) {
+      val entities = world.getEntitiesByComponents(classOf[Useless])
+        println("Killing %d entities".format(entities.length))
+        entities.foreach { entity: Entity =>
+          entity.kill
+          println("Banana bread") 
+        }
+    }
+  }
+
+  // Another Special System that runs "processInterval" every nth time
+  class MyIntervalSystem extends IntervalSystem(100) {
+    override def processInterval(delta: Int) {
+        val entities = world.getEntitiesByComponents(classOf[Useless])
+        println("Killing %d entities".format(entities.length))
+        entities.foreach { entity: Entity =>
+          entity.kill
+          println("Banana bread") 
+        }
+    }
+  }
+
+
   // Create World
-  val world = new World
+  val world = World()
   // Default is already 1 - this does not need to be set unless you need variable deltas
   // world.delta = 1
 
@@ -104,7 +129,7 @@ object Example extends App {
   world.addEntity(player)
   world.addEntity(useless)
   world.addSystem(new MovementSystem)
-  world.addSystem(new TimedSystem(3000), 1)
+  world.addSystem(new CustomTimedSystem(3000), 1)
 
   world.createGroup("THINGS")
   world.groups("THINGS") += player
