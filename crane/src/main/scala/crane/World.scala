@@ -175,8 +175,8 @@ class World(var delta: Int=1) {
     }
   }
 
-  /** Processes the world **/
-  def process() {
+  /** Force clear the deleted and added queues */
+  def clearQueues() {
     _deleted.foreach{ entity =>
       _removeEntity(entity)
     }
@@ -185,10 +185,16 @@ class World(var delta: Int=1) {
       _addEntity(entity)
     }
     _added.clear()
+  }
 
+  /** Processes the world **/
+  def process() {
+    
     val tiers = _systems.keys.toList.sortWith(_ < _)
     tiers.foreach{ tier =>
         _systems(tier).foreach{system =>
+            clearQueues()
             system.process(delta)}}
   }
+  clearQueues()
 }
