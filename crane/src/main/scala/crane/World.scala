@@ -21,7 +21,7 @@ object World {
 
 class World(var delta: Int=1) {
   // Private Variables 
-  private val _entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity]
+  private val _entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
   private val _deleted: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
   private val _added: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
 
