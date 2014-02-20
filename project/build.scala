@@ -77,7 +77,7 @@ object Dependencies {
   import Dependency._
   val crane = Seq(
     Dependency.akkaActor, Dependency.akkaTransactor, Dependency.scalaSTM, Dependency.scalatime,
-    Dependency.scalatest
+    Dependency.scalamock
   )
   val examples = Seq(
     Dependency.scalatime
@@ -94,5 +94,6 @@ object Dependency {
   val akkaTransactor = "com.typesafe.akka" %% "akka-transactor" % V.Akka
   val scalaSTM = "org.scala-stm" %% "scala-stm" % "0.7"
   val scalatime = "com.github.nscala-time" %% "nscala-time" % "0.8.0"
-  val scalatest = "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
+  val scalamock = "org.scalamock" %% "scalamock-scalatest-support" % "3.0.1" % "test"
+  val akkatest = "com.typesafe.akka" %% "akka-testkit" % V.Akka % "test"
 }

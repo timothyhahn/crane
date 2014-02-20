@@ -85,7 +85,7 @@ class Entity(var tag:String = "") {
         case Some(w: World) =>
           w._removeEntity(this, true)
         case _ =>
-          throw new DeadEntityException
+          {}
       }
       _world = None
       components.clear()
@@ -102,7 +102,7 @@ class Entity(var tag:String = "") {
         case Some(w: World) =>
           w.removeEntity(this)
         case _ =>
-          throw new DeadEntityException
+          _kill()
       }
     } else {
       throw new DeadEntityException
