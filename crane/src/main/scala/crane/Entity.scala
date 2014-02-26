@@ -24,6 +24,12 @@ class Entity(var tag:String = "") {
   val components = ArrayBuffer.empty[Component]
   val uuid: String = java.util.UUID.randomUUID.toString
 
+  def copy(): Entity = {
+    val e: new Entity(tag)
+    e.alive = alive
+    e.components = e.components
+  }
+
   override def toString: String = {
     components.map{component =>
       component.toString
