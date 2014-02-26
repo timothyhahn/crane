@@ -9,7 +9,7 @@ object CraneBuild extends Build {
 
   lazy val defaultSettings = Defaults.defaultSettings ++ Seq(
     organization := "net.timothyhahn",
-    version := "0.2.5",
+    version := "0.2.6",
     scalaVersion := Dependency.V.Scala,
     EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.Unmanaged, EclipseCreateSrc.Source, EclipseCreateSrc.Resource),
     EclipseKeys.withSource := true,
