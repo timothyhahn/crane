@@ -1,3 +1,6 @@
+//
+// World.scala
+//
 package crane
 
 /** Crane Exception Imports **/
@@ -9,18 +12,18 @@ import scala.collection.concurrent.{Map => ConcurrentMap}
 import java.util.concurrent.ConcurrentHashMap
 import collection.JavaConversions._
 
-/** Creates world 
+/** Creates world
  *
  * @constructor creates the world
  * @param delta the delta in integers
  */
 
 object World {
-  def apply(delta: Int=1) = new World(delta)
+  def apply(delta: Int=1): World = new World(delta)
 }
 
 class World(var delta: Int=1) {
-  // Private Variables 
+  // Private Variables
   private val _entities: ArrayBuffer[Entity] = new ArrayBuffer[Entity]
   private val _deleted: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
   private val _added: ArrayBuffer[Entity] = new ArrayBuffer[Entity] with SynchronizedBuffer[Entity]
@@ -28,14 +31,14 @@ class World(var delta: Int=1) {
 
   private val _systems: HashMap[Int, ArrayBuffer[System]] = HashMap()
 
-  // Public Variables 
+  // Public Variables
   val groups: ConcurrentMap[String, ArrayBuffer[Entity]] = new ConcurrentHashMap[String, ArrayBuffer[Entity]]
 
-  // Accessors 
-  def entities = this._entities
+  // Accessors
+  def entities: ArrayBuffer[Entity] = this._entities
 
   /** Gets the entity by specific tag
-   * 
+   *
    * @param tag the tag as a String
    */
   def getEntityByTag(tag: String): Option[Entity] = {
@@ -47,7 +50,7 @@ class World(var delta: Int=1) {
    * @param componentTypes the components to match against (the class - not the instance)
    */
   def getEntitiesByComponents[T <: AnyRef](componentTypes: T*): List[Entity] = {
-    _entities.filter { entity => 
+    _entities.filter { entity =>
       val entityComponentTypes: Set[Object]  = entity.components.map(c => c.getClass).toSet
       componentTypes.toSet subsetOf entityComponentTypes
     }.toList
@@ -58,9 +61,9 @@ class World(var delta: Int=1) {
    * @param include list of components to ensure are included (the class - not the instance)
    * @param exclude list of components to ensure are excluded (the class - not the instance)
    */
-  def getEntitiesWithExclusions[T <: AnyRef](include: List[T], exclude: List[T] = List()) = {
+  def getEntitiesWithExclusions[T <: AnyRef](include: List[T], exclude: List[T] = List()): List[Entity] = {
     if (exclude.length > 0) {
-      _entities.filter { entity => 
+      _entities.filter { entity =>
         val entityComponentTypes: Set[Object]  = entity.components.map(c => c.getClass).toSet
         (include.toSet subsetOf entityComponentTypes) && (exclude.toSet intersect entityComponentTypes).isEmpty
       }.toList
@@ -78,7 +81,7 @@ class World(var delta: Int=1) {
   // Mutators
 
   /** Adds entity to world (Probably should not use - for internal use)
-   * 
+   *
    * @param entity the Entity to add to the world
    * @param second boolean signifying that the Entity has initialized this call - you should not need to use this
    */
@@ -100,7 +103,7 @@ class World(var delta: Int=1) {
    * @param entity the Entity to add
    */
   def addEntity(entity: Entity) {
-   if(!(_added contains entity)) {
+   if (!(_added contains entity)) {
       _added += entity
     }
   }
@@ -111,7 +114,7 @@ class World(var delta: Int=1) {
    * @param tier the tier that the system will run at as an integer - tiers wil be processed in order
    */
   def addSystem(system: System, tier: Int = 0) {
-    if(! _systems.contains(tier)) {
+    if (! _systems.contains(tier)) {
       _systems(tier) = new ArrayBuffer[System]
     }
     _systems(tier) += system
@@ -140,7 +143,7 @@ class World(var delta: Int=1) {
    * @param group the group name as a string
    */
   def registerEntityToGroup(entity: Entity, group: String): ArrayBuffer[Entity] = {
-    if(!(groups.keys.toList contains group)){
+    if (!(groups.keys.toList contains group)) {
       createGroup(group)
     }
     groups(group) += entity
@@ -152,11 +155,12 @@ class World(var delta: Int=1) {
    * @param second boolean signifying that the Entity has initialized this call - you should not need to use this
    */
   def _removeEntity(entity: Entity, second: Boolean = false){
-    if(_entities contains entity) {
-      if(second) {
-        for(group <- groups) {
-          if(group._2 contains entity)
+    if (_entities contains entity) {
+      if (second) {
+        for (group <- groups) {
+          if (group._2 contains entity) {
             group._2 -= entity
+          }
         }
         _entities -= entity
       } else {
@@ -170,7 +174,7 @@ class World(var delta: Int=1) {
    * @param entity the Entity to remove
    */
   def removeEntity(entity: Entity) {
-    if(!(_deleted contains entity)) {
+    if (!(_deleted contains entity)) {
       _deleted += entity
     }
   }
@@ -189,7 +193,7 @@ class World(var delta: Int=1) {
 
   /** Processes the world **/
   def process() {
-    
+
     val tiers = _systems.keys.toList.sortWith(_ < _)
     tiers.foreach{ tier =>
         _systems(tier).foreach{system =>

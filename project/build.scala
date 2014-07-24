@@ -7,7 +7,7 @@ import sbt.Project.Initialize
 
 object CraneBuild extends Build {
 
-  lazy val defaultSettings = Defaults.defaultSettings ++ Seq(
+  lazy val defaultSettings = Defaults.defaultSettings ++ org.scalastyle.sbt.ScalastylePlugin.Settings ++ Seq(
     organization := "net.timothyhahn",
     version := "0.2.6",
     scalaVersion := Dependency.V.Scala,
@@ -47,7 +47,7 @@ object CraneBuild extends Build {
   )
 
   lazy val compileJdk7Settings = Seq(
-    scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked", "-optimize", "-feature", "-language:postfixOps", "-target:jvm-1.7"),
+    scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked", "-optimize", "-feature", "-language:postfixOps", "-target:jvm-1.7", "-Xfatal-warnings"),
     javacOptions ++= Seq("-Xlint:unchecked", "-Xlint:deprecation", "-source", "1.7", "-target", "1.7")
   )
 

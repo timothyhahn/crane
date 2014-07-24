@@ -1,3 +1,6 @@
+//
+// Exceptions.scala
+//
 package crane.exceptions
 
 class DeadEntityException(message: String = null, cause: Throwable = null) extends RuntimeException(message, cause)

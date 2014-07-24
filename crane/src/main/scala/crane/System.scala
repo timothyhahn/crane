@@ -1,3 +1,6 @@
+//
+// System.scala
+//
 package crane
 
 /** External Import **/
@@ -29,10 +32,10 @@ abstract class TimedSystem(milliseconds: Int) extends System {
   def processTime(delta: Int)
 
   override def process(delta: Int) {
-    if((start to DateTime.now).millis >= milliseconds) {
+    if ((start to DateTime.now).millis >= milliseconds) {
       processTime(delta)
       start = DateTime.now
-    } 
+    }
   }
 }
 
@@ -44,7 +47,7 @@ abstract class IntervalSystem(count: Int) extends System {
 
   override def process(delta: Int) {
     counter += 1
-    if(counter >= count)  {
+    if (counter >= count)  {
       processInterval(delta)
       counter = 0
     }
