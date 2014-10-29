@@ -37,8 +37,8 @@ object Example extends App {
       // val entities = world.getEntitiesWithExclusions(include=List(classOf[Position], classOf[Velocity]), exclude=List(classOf[Useless]))
 
       entities.foreach{ entity: Entity =>
-          val position = entity.getComponent(classOf[Position])
-          val velocity = entity.getComponent(classOf[Velocity])
+          val position = entity.getComponent[Position]
+          val velocity = entity.getComponent[Velocity]
 
           (position, velocity) match {
             case(Some(p: Position), Some(v: Velocity)) =>
@@ -54,8 +54,8 @@ object Example extends App {
   // Equivalent to the system above, except you specify each individual entity
   class MovementEntityProcessingSystem extends EntityProcessingSystem(include=List(classOf[Position], classOf[Velocity])) {
     override def processEntity(e: Entity, delta: Int) {
-      val position = e.getComponent(classOf[Position])
-      val velocity = e.getComponent(classOf[Velocity])
+      val position = e.getComponent[Position]
+      val velocity = e.getComponent[Velocity]
 
       (position, velocity) match {
         case(Some(p: Position), Some(v: Velocity)) =>

@@ -6,6 +6,8 @@ package crane
 /** Crane Exception Imports **/
 import crane.exceptions.{DeadEntityException, DuplicateTagException, MissingComponentException}
 
+import scala.reflect.ClassTag
+
 /** External Imports **/
 import scala.collection.mutable.ArrayBuffer
 
@@ -41,13 +43,15 @@ class Entity(var tag: String = "", val components: ArrayBuffer[Component] = Arra
   // Accessors
   def world: Option[World] = _world
 
-  /** Returns component of a classOf[Component]
-   *
-   * @param componentType the component to get (the class, not the instance)
+  /**
+   * Returns component of a classOf[Component]
    */
-  def getComponent[T <: AnyRef](componentType: T): Option[Component] = {
+  def getComponent[T <: Component : ClassTag]: Option[T] = {
     if (alive) {
-      components find { case(component) => component.getClass == componentType }
+      components find {
+        case component: T => true
+        case _ => false
+      } map (_.asInstanceOf[T])
     } else {
       throw new DeadEntityException
     }
@@ -71,11 +75,10 @@ class Entity(var tag: String = "", val components: ArrayBuffer[Component] = Arra
 
   /** Removes component of a classOf[Component]
    *
-   * @param componentType the component to remove (the class, not the instance)
    */
-  def removeComponent[T <: AnyRef](componentType: T) {
+  def removeComponent[T <: Component : ClassTag]() {
     if (alive) {
-      val removeEntity: Option[Component] = getComponent(componentType)
+      val removeEntity: Option[Component] = getComponent[T]
       removeEntity match {
         case Some(e: Component) =>
           components -= e
