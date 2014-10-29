@@ -17,14 +17,24 @@ class EntitySpec extends FlatSpec with MockFactory {
     entity.components += component
     assert(entity.components.length == 1)
 
-    assert(entity.getComponent(component.getClass) match {
+    assert(entity.getComponent[Component] match {
       case Some(s) => true
       case _ => false
     })
+  }
 
-    assert(entity.getComponent(classOf[Component]) match {
-      case Some(s) => false
-      case _ => true
+  it should "downcast Component when getting it from entity" in {
+    val entity = Entity()
+    class CustomComponent extends Component
+    val customComponent = mock[CustomComponent]
+
+    entity.components.append(customComponent)
+
+    assert(entity.components.length == 1)
+
+    assert(entity.getComponent[CustomComponent] match {
+      case Some(cc: CustomComponent) => true
+      case _ => false
     })
   }
 
@@ -51,7 +61,7 @@ class EntitySpec extends FlatSpec with MockFactory {
     }
 
     intercept[DeadEntityException] {
-      entity.removeComponent(classOf[Component])
+      entity.removeComponent[Component]
     }
   }
 }
